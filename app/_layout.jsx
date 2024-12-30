@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
+
 // Import your global CSS file
 import "../global.css";
 
@@ -39,3 +40,4 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
+
