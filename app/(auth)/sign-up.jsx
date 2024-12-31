@@ -1,22 +1,53 @@
-import { View, Text, ScrollView, Image, Dimensions } from "react-native";
+import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
 import React, { use, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-const submit = () => {};
-
 const SignUp = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submit = async () => {
+    if (form.email === "" || form.password === "" || form.username === null) {
+      Alert.alert("Error!", "Please fill in all fields");
+      return;
+    }
+
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!regex.test(form.email)) {
+      Alert.alert("Error", "Please enter valid email");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      Alert.alert("Error", "Password should contain minimum 6 characters");
+      return;
+    }
+    setIsSubmitting(true);
+    const userName = form.username;
+    try {
+      Alert.alert("Success", "User signed un successfully");
+      router.replace({
+        pathname: "/home",
+        params: { userName },
+      });
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
@@ -73,8 +104,8 @@ const SignUp = () => {
             otherStyles="mt-7"
           />
           <CustomButton
-            title="SignIn"
-            handlePress={submit()}
+            title="Sign Up"
+            handlePress={submit}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />

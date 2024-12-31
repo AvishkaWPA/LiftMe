@@ -1,20 +1,42 @@
-import { View, Text, ScrollView, Image, Dimensions } from "react-native";
+import { View, Text, ScrollView, Image, Dimensions, Alert } from "react-native";
 import React, { use, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import FormField from "../../components/FormField";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
-const submit = () => {};
 const SignIn = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const submit = async () => {
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error!", "Please fill in all fields");
+      return;
+    }
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!regex.test(form.email)) {
+      Alert.alert("Error", "Please enter valid email");
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      Alert.alert("Success", "User signed in successfully");
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <SafeAreaView className="h-full bg-primary">
       <ScrollView>
@@ -46,7 +68,6 @@ const SignIn = () => {
             otherStyles="mt-7"
             keyboardType="email-address"
           />
-
           <FormField
             title="Password"
             value={form.password}
@@ -60,7 +81,7 @@ const SignIn = () => {
           />
           <CustomButton
             title="SignIn"
-            handlePress={submit()}
+            handlePress={submit}
             containerStyles="mt-7"
             isLoading={isSubmitting}
           />
