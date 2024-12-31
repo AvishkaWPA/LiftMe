@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import images from "../../constants/images";
 import CustomButton from "../../components/CustomButton";
+import { useSearchParams } from "expo-router/build/hooks";
 
 const Home = () => {
   const [userName, setUserName] = useState("Avishka");
@@ -25,6 +26,8 @@ const Home = () => {
     // Fetch data from the API
     const fetchData = async () => {
       try {
+        // setUserName(useSearchParams());
+
         const response = await fetch(
           "https://wger.de/api/v2/exercise-translation/?limit=20&offset=80"
         );

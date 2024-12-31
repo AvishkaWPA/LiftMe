@@ -34,12 +34,11 @@ const SignUp = () => {
       return;
     }
     setIsSubmitting(true);
-    const userName = form.username;
     try {
       Alert.alert("Success", "User signed un successfully");
+      router.push(`/details?userName=${form.username}`);
       router.replace({
         pathname: "/home",
-        params: { userName },
       });
     } catch (error) {
       Alert.alert("Error", error.message);
